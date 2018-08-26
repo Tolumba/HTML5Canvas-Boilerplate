@@ -7,9 +7,11 @@
 export const randomIntInRange = ( in1, in2 ) => {
 	const 
 		_in1 = in1||0,
-		_in2 = in2||1,
+		_in2 = in2||0,
+
 		_min = Math.min( _in1, _in2 ),
 		_max = Math.max( _in1, _in2 ),
+
 		_diff = _max - _min;
 
 	return Math.round( Math.random()*_diff + _min );
@@ -24,9 +26,11 @@ export const randomIntInRange = ( in1, in2 ) => {
 export const randomInRange = ( in1, in2 ) => {
 	const 
 		_in1 = in1||0,
-		_in2 = in2||1,
+		_in2 = in2||0,
+
 		_min = Math.min( _in1, _in2 ),
 		_max = Math.max( _in1, _in2 ),
+		
 		_diff = _max - _min;
 
 	return Math.random()*_diff + _min;

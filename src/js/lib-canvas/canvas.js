@@ -1,3 +1,5 @@
+import { getDistance, resolveCollision } from '../utils/calculate.js';
+
 /**
  *  Canvas Class
  */
@@ -44,6 +46,17 @@ export default class Canvas{
 		this.config = Object.assign( {}, _defaults, _settings );
 
 		DOMRender(this);
+
+		window.addEventListener( 'resize', this.onWindowResize.bind(this) );
+	}
+
+	onWindowResize(e){
+
+		if( this._resizeTimeout ){
+			clearTimeout( this._resizeTimeout );
+		}
+
+		this._resizeTimeout = setTimeout( this.resize.bind(this), 50, innerWidth, innerHeight );
 	}
 
 	resize( width, height ){
@@ -54,6 +67,31 @@ export default class Canvas{
 	update(){
 		for( let object of this.config.objects ){
 			object && 'function' == typeof object.render && object.update(this._context);
+		}
+		this.detectCollisions();
+	}
+
+	detectCollisions(){
+		let
+			distance,
+			objects = this.config.objects;
+
+
+		for( let object of objects ){
+
+			for( let i=0; i < objects.length; i++ ){
+
+				if( object === objects[i] ) {
+					continue;
+				};
+
+				distance = getDistance( object, objects[i] );
+
+				if( distance <= (object.radius + objects[i].radius) ){
+					//object.fillStyle = 'red';
+					resolveCollision( object, objects[i] );
+				}
+			}
 		}
 	}
 

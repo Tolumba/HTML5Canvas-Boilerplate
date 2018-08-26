@@ -16,6 +16,7 @@ export default class Circle{
 				dy: 0,
 				dragx: 0,
 				dragy: 0,
+				mass: 1,
 			}, phisics);
 
 		this.x = x;
@@ -26,6 +27,7 @@ export default class Circle{
 		this.dy = _phisics.dy;
 		this.dragx = _phisics.dragx;
 		this.dragy = _phisics.dragy;
+		this.mass = _phisics.mass;
 
 		this.fillStyle   = _style.fillStyle;
 		this.strokeStyle = _style.strokeStyle;
@@ -50,10 +52,26 @@ export default class Circle{
 			this.dx = this.dx + this.dragx;
 		}
 
+		if( this.x + this.radius > canvas.width ){
+			this.x = canvas.width - this.radius;
+		}
+
+		if( this.x - this.radius < 0 ){
+			this.x = this.radius;
+		}
+
 		if( this.y + this.radius > canvas.height || this.y - this.radius < 0 ){
 			this.dy = -this.dy;
 		}else{
 			this.dy = this.dy + this.dragy;
+		}
+
+		if( this.y + this.radius > canvas.height ){
+			this.y = canvas.height - this.radius;
+		}
+
+		if( this.y - this.radius < 0 ){
+			this.y = this.radius;
 		}
 
 		this.x += this.dx;
