@@ -23,15 +23,16 @@ const generateCircle = (settings) => {
 		dy: randomInRange(settings.min_velocity, settings.max_velocity),
 		dragx: settings.wind,
 		dragy: settings.gravity,
+		mass: settings.density*radius,
 	};
 
-	/*while( phisics.dx == 0 ){
+	while( phisics.dx == 0 ){
 		phisics.dx = randomIntInRange( settings.min_velocity, settings.max_velocity );
 	}
 
 	while( phisics.dy == 0 ){
 		phisics.dy = randomIntInRange( settings.min_velocity, settings.max_velocity );
-	}*/
+	}
 
 	return new Circle( x, y, radius, style, phisics );
 };
@@ -53,7 +54,6 @@ const isValidObject = (obj, collection) => {
 		distance = getDistance( obj, collection[i] );
 
 		if( distance <= (obj.radius + collection[i].radius) ){
-			console.log('invalid');
 			return false;
 		}
 	}
@@ -72,18 +72,19 @@ const component = () => {
 	let
 		canvas,
 
-		objects_num = 100,
+		objects_num = 300,
 		objects = [],
 		object;
 
 	const
 		generatorSettings = {
 			min_radius: 20,
-			max_radius: 40,
-			min_velocity: -2,
-			max_velocity: 2,
-			gravity: .04,
-			wind: .01,
+			max_radius: 50,
+			min_velocity: -5,
+			max_velocity: 5,
+			gravity: 0.01,
+			wind: 0,
+			density: 1,
 
 			colors: [
 				'#D4018F',
@@ -109,11 +110,22 @@ const component = () => {
 			],
 		};
 
+	const
+		retry_limit = 2000;
+
+	let
+		iterations = 0;
+
 	while( objects.length < objects_num ){
 
 		object = generateCircle( generatorSettings );
 
-		isValidObject( object, objects ) && objects.push( object ) && console.log( object );
+		isValidObject( object, objects ) && objects.push( object );
+
+		if( iterations++ > retry_limit ){
+			break;
+		};
+
 	}
 	
 	canvas = new Canvas(element, {
