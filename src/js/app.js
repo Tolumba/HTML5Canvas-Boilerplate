@@ -72,17 +72,17 @@ const component = () => {
 	let
 		canvas,
 
-		objects_num = 300,
+		objects_num = 30,
 		objects = [],
 		object;
 
 	const
 		generatorSettings = {
-			min_radius: 20,
-			max_radius: 50,
+			min_radius: 100,
+			max_radius: 100,
 			min_velocity: -5,
 			max_velocity: 5,
-			gravity: 0.01,
+			gravity: 0,
 			wind: 0,
 			density: 1,
 
@@ -116,7 +116,7 @@ const component = () => {
 	let
 		iterations = 0;
 
-	while( objects.length < objects_num ){
+	/*while( objects.length < objects_num ){
 
 		object = generateCircle( generatorSettings );
 
@@ -125,9 +125,9 @@ const component = () => {
 		if( iterations++ > retry_limit ){
 			break;
 		};
-
-	}
-	
+	}*/
+	objects.push( new Circle( 100, 200, 100, {}, {dx:6, dy:6, mass:100} ) );
+	objects.push( new Circle( 600, 700, 80, {}, {dx:-6, dy:-6, mass:80} ) );
 	canvas = new Canvas(element, {
 		styles: styles,
 		objects: objects,

@@ -1,4 +1,4 @@
-import { getDistance, resolveCollision } from '../utils/calculate.js';
+import { getDistance } from '../utils/calculate.js';
 
 /**
  *  Canvas Class
@@ -69,13 +69,15 @@ export default class Canvas{
 			object && 'function' == typeof object.render && object.update(this._context);
 		}
 		this.detectCollisions();
+		this.resolveCollisions();
 	}
 
 	detectCollisions(){
 		let
-			distance,
-			objects = this.config.objects;
+			distance;
 
+		const
+			objects = this.config.objects;
 
 		for( let object of objects ){
 
@@ -88,10 +90,21 @@ export default class Canvas{
 				distance = getDistance( object, objects[i] );
 
 				if( distance <= (object.radius + objects[i].radius) ){
-					//object.fillStyle = 'red';
-					resolveCollision( object, objects[i] );
+					if( !object.collides.includes(objects[i]) ){
+						object.collides.push(objects[i]);
+					}
+					if( !objects[i].collides.includes(object) ){
+						objects[i].collides.push(object);
+					}
 				}
 			}
+		}
+	}
+
+	resolveCollisions(){
+
+		for( let object of this.config.objects ){
+			object.resolveCollisions();
 		}
 	}
 

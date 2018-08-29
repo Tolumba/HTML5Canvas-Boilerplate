@@ -14,37 +14,37 @@ const rotateVector = ( dx, dy, angle ) =>{
 const resolveCollision = ( obj1, obj2 ) => {
 
 	const 
-		sx = obj2.x - obj1.x,
-		sy = obj2.y - obj1.y,
-
-		dvx = obj1.dx - obj2.dx,
-		dvy = obj1.dy - obj2.dy;
-
-	if( sx*dvx + sy*dvy < 0 ){
-		return;
-	}
-
-	const
-		ang = -Math.atan2(sy, sx),
+		v1 = getObjSpeed(obj1),
+		v2 = getObjSpeed(obj2),
+		t1 = getObjSpeedAngle(obj1),
+		t2 = getObjSpeedAngle(obj2),
+		sx = obj1.x - obj2.x,
+		sy = obj1.y - obj2.y,
+		fi = Math.atan2(sy, sx),
 		m1 = obj1.mass,
-		m2 = obj2.mass;
+		m2 = obj2.mass,
+		V1xr = v1*Math.cos(t1-fi),
+		V1yr = v1*Math.sin(t1-fi),
+		V2xr = v2*Math.cos(t2-fi),
+		V2yr = v2*Math.sin(t2-fi);
 
-	let
-		u1 = rotateVector(obj1.dx, obj1.dy, ang),
-		u2 = rotateVector(obj2.dx, obj2.dy, ang),
-		dx1 = u1.dx * (m1 - m2) / (m1 + m2) + u2.dx * 2 * m2 / (m1 + m2),
-		dy1 = u1.dy,
-		dx2 = u2.dx * (m2 - m1) / (m1 + m2) + u1.dx * 2 * m1 / (m1 + m2),
-		dy2 = u2.dy;
+		obj1.dx = Math.cos( fi ) * (V1xr * (m1 - m2) + 2 * m2 * V2xr) / (m1 + m2) +
+			V1yr * Math.cos(fi + .5 * Math.PI),
+		obj1.dy = Math.sin( fi ) * (V1xr * (m1 - m2) + 2 * m2 * V2xr) / (m1 + m2) +
+			V1yr * Math.sin(fi + .5 * Math.PI),
 
-	u1 = rotateVector(dx1, dy1, -ang);
-	u2 = rotateVector(dx2, dy2, -ang);
+		obj2.dx = Math.cos( fi ) * (V2xr * (m1 - m2) + 2 * m2 * V1xr) / (m1 + m2) +
+			V2yr * Math.cos(fi + .5 * Math.PI),
+		obj2.dy = Math.sin( fi ) * (V2xr * (m1 - m2) + 2 * m2 * V1xr) / (m1 + m2) +
+			V2yr * Math.sin(fi + .5 * Math.PI);
+};
 
-	obj1.dx = u1.dx;
-	obj1.dy = u1.dy;
-	obj2.dx = u2.dx;
-	obj2.dy = u2.dy;
-	
+const getObjSpeed = (obj) => {
+	return Math.sqrt(Math.pow(obj.dx, 2) + Math.pow(obj.dy, 2));
+};
+
+const getObjSpeedAngle = (obj) => {
+	return Math.atan2(obj.dy, obj.dx);
 };
 
 export { getDistance, rotateVector, resolveCollision };
