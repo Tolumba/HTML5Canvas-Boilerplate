@@ -44,9 +44,11 @@ export default class Circle{
 		ctx.arc( this.x, this.y, this.radius, 0, Math.PI*2 );
 		ctx.fill();
 		ctx.stroke();
+		/*
 		ctx.fillStyle = 'black';
 		ctx.fillText( `dx:${this.dx.toFixed(2)}`, this.x, this.y );
 		ctx.fillText( `dy:${this.dy.toFixed(2)}`, this.x, this.y + 16 );
+		*/
 	}
 
 	update( ctx ){
@@ -54,7 +56,7 @@ export default class Circle{
 			canvas = ctx.canvas;
 
 		if( this.x + this.radius > canvas.width || this.x - this.radius < 0 ){
-			this.dx = -this.dx;
+			this.dx = -this.dx*.9;
 		}else{
 			this.dx = this.dx + this.dragx;
 		}
@@ -68,7 +70,7 @@ export default class Circle{
 		}
 
 		if( this.y + this.radius > canvas.height || this.y - this.radius < 0 ){
-			this.dy = -this.dy;
+			this.dy = -this.dy*.9;
 		}else{
 			this.dy = this.dy + this.dragy;
 		}

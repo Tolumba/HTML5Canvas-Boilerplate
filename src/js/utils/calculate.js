@@ -18,9 +18,9 @@ const resolveCollision = ( obj1, obj2 ) => {
 		v2 = getObjSpeed(obj2),
 		t1 = getObjSpeedAngle(obj1),
 		t2 = getObjSpeedAngle(obj2),
-		sx = obj1.x - obj2.x,
+		sx = obj2.x - obj1.x,
 		sy = obj1.y - obj2.y,
-		fi = Math.atan2(sy, sx),
+		fi = -Math.atan2(sy, sx),
 		m1 = obj1.mass,
 		m2 = obj2.mass,
 		V1xr = v1*Math.cos(t1-fi),
@@ -33,9 +33,9 @@ const resolveCollision = ( obj1, obj2 ) => {
 		obj1.dy = Math.sin( fi ) * (V1xr * (m1 - m2) + 2 * m2 * V2xr) / (m1 + m2) +
 			V1yr * Math.sin(fi + .5 * Math.PI),
 
-		obj2.dx = Math.cos( fi ) * (V2xr * (m1 - m2) + 2 * m2 * V1xr) / (m1 + m2) +
+		obj2.dx = Math.cos( fi ) * (V2xr * (m2 - m1) + 2 * m1 * V1xr) / (m1 + m2) +
 			V2yr * Math.cos(fi + .5 * Math.PI),
-		obj2.dy = Math.sin( fi ) * (V2xr * (m1 - m2) + 2 * m2 * V1xr) / (m1 + m2) +
+		obj2.dy = Math.sin( fi ) * (V2xr * (m2 - m1) + 2 * m1 * V1xr) / (m1 + m2) +
 			V2yr * Math.sin(fi + .5 * Math.PI);
 };
 

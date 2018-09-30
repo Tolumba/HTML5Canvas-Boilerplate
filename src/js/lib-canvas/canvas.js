@@ -19,6 +19,7 @@ export default class Canvas{
 				self._canvas = document.createElement('canvas');
 
 				self._canvas.id = self.config.styles.canvas || 'canvas';
+				self.idle = false;
 
 				self.element.appendChild( self._canvas );
 				self._context = self.getContext( self.config.context, self.config.contextAtts);
@@ -97,8 +98,27 @@ export default class Canvas{
 						objects[i].collides.push(object);
 					}
 				}
+
+				if( distance < (object.radius + objects[i].radius) ){
+					this.fixOverlapping( object, objects[i], distance );
+				}
 			}
 		}
+	}
+
+	fixOverlapping( obj1, obj2, dist ){
+
+		const
+			delta = (obj1.radius + obj2.radius) - dist,
+			sx = obj1.x - obj2.x,
+			sy = obj1.y - obj2.y,
+			angle = Math.atan2(sy, sx);
+
+		obj1.x += .5*delta*Math.cos(angle);
+		obj1.y += .5*delta*Math.sin(angle);
+
+		obj2.x += .5*delta*Math.cos(.5*Math.PI - angle);
+		obj2.y += .5*delta*Math.sin(.5*Math.PI - angle);
 	}
 
 	resolveCollisions(){
@@ -115,6 +135,11 @@ export default class Canvas{
 	}
 
 	render(){
+
+		if( this.idle ){
+			return;
+		}
+
 		window.requestAnimationFrame( this.render.bind(this) );
 		this.context.clearRect(0,0, this.canvas.width, this.canvas.height);
 		

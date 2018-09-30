@@ -19,19 +19,19 @@ const generateCircle = (settings) => {
 	};
 
 	phisics = {
-		dx: randomInRange(settings.min_velocity, settings.max_velocity),
-		dy: randomInRange(settings.min_velocity, settings.max_velocity),
+		dx: randomInRange(-settings.velocity, settings.velocity),
+		dy: randomInRange(-settings.velocity, settings.velocity),
 		dragx: settings.wind,
 		dragy: settings.gravity,
 		mass: settings.density*radius,
 	};
 
 	while( phisics.dx == 0 ){
-		phisics.dx = randomIntInRange( settings.min_velocity, settings.max_velocity );
+		phisics.dx = randomInRange(-settings.velocity, settings.velocity);
 	}
 
 	while( phisics.dy == 0 ){
-		phisics.dy = randomIntInRange( settings.min_velocity, settings.max_velocity );
+		phisics.dy = randomInRange(-settings.velocity, settings.velocity);
 	}
 
 	return new Circle( x, y, radius, style, phisics );
@@ -72,16 +72,15 @@ const component = () => {
 	let
 		canvas,
 
-		objects_num = 30,
+		objects_num = 300,
 		objects = [],
 		object;
 
 	const
 		generatorSettings = {
-			min_radius: 100,
+			min_radius: 90,
 			max_radius: 100,
-			min_velocity: -5,
-			max_velocity: 5,
+			velocity: 4,
 			gravity: 0,
 			wind: 0,
 			density: 1,
@@ -116,7 +115,7 @@ const component = () => {
 	let
 		iterations = 0;
 
-	/*while( objects.length < objects_num ){
+	while( objects.length < objects_num ){
 
 		object = generateCircle( generatorSettings );
 
@@ -125,17 +124,35 @@ const component = () => {
 		if( iterations++ > retry_limit ){
 			break;
 		};
-	}*/
-	objects.push( new Circle( 100, 200, 100, {}, {dx:6, dy:6, mass:100} ) );
-	objects.push( new Circle( 600, 700, 80, {}, {dx:-6, dy:-6, mass:80} ) );
+	}
+	
+/*
+	objects.push( new Circle( 600, 700, 100, {}, {dx:-6, dy:-6, mass:100} ) );
+	objects.push( new Circle( 100, 200, 80, {}, {dx:6, dy:6, mass:80} ) );
+*/
 	canvas = new Canvas(element, {
 		styles: styles,
 		objects: objects,
+	});
+
+
+	document.body.addEventListener('click', (e) =>{
+		canvas.idle = !canvas.idle;
+		canvas.render();
+		/*
+		if( canvas.idle ){
+			canvas.detectCollisions();
+			for( let obj of canvas.config.objects ){
+				console.log( obj );
+			}
+		}
+		*/
 	});
 
 	canvas.render();
 
 	return element;
 }
+
 
 document.body.appendChild(component());
